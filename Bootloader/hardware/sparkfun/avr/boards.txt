@@ -1,0 +1,20 @@
+menu.cpu=Processor
+
+################################################################################
+
+roshamglo.name=Roshamglo (ATtiny84, 3.3V, 8Mhz)
+
+roshamglo.upload.using=micronucleusprog
+roshamglo.upload.protocol=usb
+roshamglo.upload.tool=micronucleus
+roshamglo.upload.maximum_size=6012
+
+roshamglo.build.mcu=attiny84
+roshamglo.build.f_cpu=8000000L
+roshamglo.build.board=ROSHAMGLO
+roshamglo.build.core=arduino:arduino
+roshamglo.build.variant=tiny14
+
+#roshamglo.upload.wait_for_upload_port = false
+#roshamglo.upload.use_1200bps_touch = false
+#roshamglo.upload.disable_flushing = false

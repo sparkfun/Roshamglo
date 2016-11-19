@@ -1,0 +1,1 @@
+avrdude.exe -c arduino -p t84 -P <COM PORT> -b 19200 -U lfuse:w:0xe2:m -U hfuse:w:0xdd:m -U efuse:w:0xfe:m
