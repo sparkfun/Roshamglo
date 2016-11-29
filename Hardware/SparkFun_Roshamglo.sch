@@ -16547,6 +16547,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <rectangle x1="0.762" y1="-1.9558" x2="1.2446" y2="-1.7526" layer="31" rot="R90"/>
 <text x="0" y="2.54" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
 <text x="0" y="-3.175" size="0.6096" layer="27" font="vector" ratio="20" align="bottom-center">&gt;VALUE</text>
+<circle x="-2.159" y="2.159" radius="0.127" width="0.127" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -21261,6 +21262,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <text x="239.268" y="7.112" size="2.54" layer="94">v01</text>
 <text x="129.54" y="116.84" size="2.54" layer="94">IO Breakout</text>
 <wire x1="127" y1="121.92" x2="127" y2="35.56" width="0.2032" layer="97" style="shortdash"/>
+<text x="180.34" y="99.06" size="1.778" layer="97">Cut JP1/2 to
+disable LEDs</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
