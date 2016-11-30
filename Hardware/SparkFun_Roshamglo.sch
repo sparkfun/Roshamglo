@@ -21266,6 +21266,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="127" y1="121.92" x2="127" y2="35.56" width="0.2032" layer="97" style="shortdash"/>
 <text x="180.34" y="99.06" size="1.778" layer="97">Cut JP1/2 to
 disable LEDs</text>
+<text x="76.2" y="68.58" size="1.778" layer="97" align="bottom-center">Cut JP3/4 to disable 
+IR LED and Receiver</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
