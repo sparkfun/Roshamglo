@@ -20934,14 +20934,14 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="9.525" y1="0" x2="8.255" y2="0" width="0.4064" layer="21"/>
 <wire x1="-6.985" y1="0" x2="-8.255" y2="0" width="0.4064" layer="21"/>
 <wire x1="-7.62" y1="0.635" x2="-7.62" y2="-0.635" width="0.4064" layer="21"/>
-<circle x="13.97" y="0" radius="0.40160625" width="0.889" layer="29"/>
-<circle x="13.97" y="0" radius="0.40160625" width="1.778" layer="30"/>
-<circle x="21.59" y="0" radius="0.40160625" width="0.889" layer="29"/>
-<circle x="21.59" y="0" radius="0.40160625" width="1.778" layer="30"/>
-<circle x="-13.97" y="0" radius="0.40160625" width="0.889" layer="29"/>
-<circle x="-13.97" y="0" radius="0.40160625" width="1.778" layer="30"/>
-<circle x="-21.59" y="0" radius="0.40160625" width="1.778" layer="30"/>
-<circle x="-21.59" y="0" radius="0.40160625" width="0.889" layer="29"/>
+<circle x="13.716" y="0" radius="0.40160625" width="0.889" layer="29"/>
+<circle x="13.716" y="0" radius="0.40160625" width="1.778" layer="30"/>
+<circle x="21.336" y="0" radius="0.40160625" width="0.889" layer="29"/>
+<circle x="21.336" y="0" radius="0.40160625" width="1.778" layer="30"/>
+<circle x="-13.716" y="0" radius="0.40160625" width="0.889" layer="29"/>
+<circle x="-13.716" y="0" radius="0.40160625" width="1.778" layer="30"/>
+<circle x="-21.336" y="0" radius="0.40160625" width="1.778" layer="30"/>
+<circle x="-21.336" y="0" radius="0.40160625" width="0.889" layer="29"/>
 <wire x1="-22.86" y1="5.08" x2="22.86" y2="5.08" width="0.127" layer="51"/>
 <wire x1="-22.86" y1="-5.08" x2="22.86" y2="-5.08" width="0.127" layer="51"/>
 <text x="-23.749" y="0" size="0.6096" layer="25" font="vector" ratio="20" rot="R90" align="bottom-center">&gt;NAME</text>
