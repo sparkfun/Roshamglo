@@ -3401,8 +3401,8 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 </element>
 <element name="JP1" library="SparkFun-Jumpers" package="SMT-JUMPER_2_NC_TRACE_SILK" value="" x="8.001" y="38.989" rot="R270"/>
 <element name="JP2" library="SparkFun-Jumpers" package="SMT-JUMPER_2_NC_TRACE_SILK" value="" x="11.811" y="38.989" rot="R270"/>
-<element name="Q1" library="SparkFun-DiscreteSemi" package="SOT23-3" value="500mA/300V" x="9.398" y="54.737">
-<attribute name="PROD_ID" value="TRANS-09116" x="9.398" y="54.737" size="1.778" layer="27" font="vector" ratio="15" display="off"/>
+<element name="Q1" library="SparkFun-DiscreteSemi" package="SOT23-3" value="600mA/40V" x="9.398" y="54.737">
+<attribute name="PROD_ID" value="TRANS-08049" x="9.398" y="54.737" size="1.778" layer="27" font="vector" ratio="15" display="off"/>
 </element>
 <element name="R7" library="SparkFun-Resistors" package="0603" value="1k" x="16.51" y="39.37" rot="R180">
 <attribute name="PROD_ID" value="RES-07856" x="16.51" y="39.37" size="1.778" layer="27" font="vector" ratio="15" rot="R180" display="off"/>
