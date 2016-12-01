@@ -11,15 +11,15 @@
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="yes"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="yes"/>
+<layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
@@ -34,9 +34,9 @@
 <layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
-<layer number="51" name="tDocu" color="6" fill="1" visible="no" active="yes"/>
+<layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
@@ -209,6 +209,8 @@ Shawn Hymel</text>
 <text x="16.51" y="55.626" size="1.4224" layer="22" font="vector" ratio="15" rot="SMR180" align="bottom-center">Hack me! sfe.io/roshamglo</text>
 <text x="16.51" y="48.26" size="1.27" layer="21" font="vector" ratio="15" rot="SR180" align="bottom-center">Work hard. Play hardware.</text>
 <text x="16.51" y="18.415" size="1.778" layer="21" font="vector" ratio="15" rot="SR180" align="bottom-center">@sparkfun</text>
+<text x="8.001" y="37.592" size="0.8128" layer="21" font="vector" ratio="15" rot="R180" align="bottom-center">RED</text>
+<text x="11.811" y="37.592" size="0.8128" layer="21" font="vector" ratio="15" rot="R180" align="bottom-center">GRN</text>
 </plain>
 <libraries>
 <library name="SparkFun-Batteries">
@@ -3578,17 +3580,19 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <contactref element="JP2" pad="2"/>
 <contactref element="J5" pad="3"/>
 <via x="19.8755" y="36.2425" extent="1-16" drill="0.381"/>
-<wire x1="11.811" y1="38.481" x2="11.811" y2="37.211" width="0.254" layer="1"/>
-<via x="11.811" y="37.211" extent="1-16" drill="0.381"/>
+<via x="13.335" y="37.592" extent="1-16" drill="0.381"/>
 <wire x1="29.6545" y1="23.6855" x2="29.6545" y2="26.913784375" width="0.254" layer="16"/>
 <wire x1="29.6545" y1="26.913784375" x2="20.325784375" y2="36.2425" width="0.254" layer="16"/>
 <wire x1="20.325784375" y1="36.2425" x2="19.8755" y2="36.2425" width="0.254" layer="16"/>
-<wire x1="11.811" y1="37.211" x2="12.7795" y2="36.2425" width="0.254" layer="16"/>
-<wire x1="12.7795" y1="36.2425" x2="19.8755" y2="36.2425" width="0.254" layer="16"/>
+<wire x1="19.8755" y1="36.2425" x2="14.6845" y2="36.2425" width="0.254" layer="16"/>
+<wire x1="14.6845" y1="36.2425" x2="13.335" y2="37.592" width="0.254" layer="16"/>
 <wire x1="20.579" y1="35.3535" x2="20.1137" y2="35.3535" width="0.254" layer="1"/>
 <wire x1="20.1137" y1="35.3535" x2="19.8755" y2="35.5917" width="0.254" layer="1"/>
 <wire x1="19.8755" y1="35.5917" x2="19.8755" y2="36.2425" width="0.254" layer="1"/>
 <wire x1="31.75" y1="21.59" x2="29.6545" y2="23.6855" width="0.254" layer="16"/>
+<wire x1="11.811" y1="38.481" x2="11.811" y2="37.99360625" width="0.254" layer="1"/>
+<wire x1="11.811" y1="37.99360625" x2="12.21260625" y2="37.592" width="0.254" layer="1"/>
+<wire x1="12.21260625" y1="37.592" x2="13.335" y2="37.592" width="0.254" layer="1"/>
 </signal>
 <signal name="5">
 <contactref element="IC1" pad="20"/>
@@ -3916,30 +3920,31 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <approved hash="6,16,56be557023e14029"/>
 <approved hash="19,1,56dee6de7ae3cae3"/>
 <approved hash="6,16,08e946f446f708ea"/>
+<approved hash="6,16,1220886d086f9222"/>
 <approved hash="19,1,625d325dae5cfe5c"/>
 <approved hash="19,1,370dc59af3b67542"/>
 <approved hash="19,1,419c9234d1e6762d"/>
+<approved hash="19,1,e09ea7d97682b286"/>
 <approved hash="19,1,1b7c515e50cd1aef"/>
 <approved hash="19,1,f81a770277191df8"/>
-<approved hash="19,1,e09ea7d97682b286"/>
-<approved hash="19,1,889d9218b8b8525d"/>
 <approved hash="19,1,16032dbaf6e43d3d"/>
+<approved hash="19,1,889d9218b8b8525d"/>
 <approved hash="19,1,6042966091c867ea"/>
-<approved hash="19,1,1d7ceb5eeac21ce0"/>
 <approved hash="19,1,4495700dc41ad7e6"/>
+<approved hash="19,1,1d7ceb5eeac21ce0"/>
 <approved hash="19,1,0667bd8c600bfc3a"/>
-<approved hash="19,1,b5437f9483b8650c"/>
 <approved hash="19,1,fbd2103ac1e80663"/>
-<approved hash="19,1,0b7c195e18cd0aef"/>
+<approved hash="19,1,b5437f9483b8650c"/>
 <approved hash="19,1,7642646063c771e5"/>
+<approved hash="19,1,0b7c195e18cd0aef"/>
 <approved hash="19,1,9842abb8f2e6517f"/>
 <approved hash="19,1,0edf1c1ad4ba561c"/>
+<approved hash="19,1,6443fa61fdca63e8"/>
 <approved hash="19,1,6243fc61fdd263f0"/>
 <approved hash="19,1,197d875f86c018e2"/>
-<approved hash="19,1,6443fa61fdca63e8"/>
 <approved hash="6,16,2eae6cb36cb22eaf"/>
 <approved hash="6,16,6d7fa262a2656d78"/>
-<approved hash="6,16,1220886d086f9222"/>
+<approved hash="6,16,b2c372c672c1b2c4"/>
 </errors>
 </board>
 </drawing>
