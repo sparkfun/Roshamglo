@@ -28,8 +28,8 @@
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
-<layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
@@ -38,7 +38,7 @@
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
 <layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
@@ -195,7 +195,7 @@ IRT</text>
 <text x="23.622" y="39.878" size="0.8128" layer="21" font="vector" ratio="15" align="bottom-center">D3
 IRR</text>
 <text x="33.02" y="31.75" size="0.8128" layer="21" font="vector" ratio="15" rot="R90" align="bottom-center">RST</text>
-<text x="18.415" y="2.8575" size="0.8128" layer="20" font="vector" ratio="15" align="bottom-center">ROUTE 
+<text x="18.288" y="2.7432" size="0.8128" layer="20" font="vector" ratio="15" align="bottom-center">ROUTE 
 OUT</text>
 <text x="17.78" y="55.626" size="1.4224" layer="22" font="vector" ratio="15" rot="SMR180" align="bottom-center">Hack me! sfe.io/roshamglo</text>
 <text x="17.78" y="48.26" size="1.27" layer="21" font="vector" ratio="15" rot="SR180" align="bottom-center">Work hard. Play hardware.</text>
@@ -206,12 +206,12 @@ OUT</text>
 <vertex x="23.8252" y="72.136"/>
 <vertex x="23.3934" y="71.374"/>
 </polygon>
-<wire x1="16.002" y1="5.207" x2="19.812" y2="5.207" width="0.2032" layer="20"/>
-<wire x1="19.812" y1="5.207" x2="21.082" y2="3.937" width="0.2032" layer="20" curve="-90"/>
-<wire x1="21.082" y1="3.937" x2="19.812" y2="2.667" width="0.2032" layer="20" curve="-90"/>
-<wire x1="19.812" y1="2.667" x2="16.002" y2="2.667" width="0.2032" layer="20"/>
-<wire x1="16.002" y1="2.667" x2="14.732" y2="3.937" width="0.2032" layer="20" curve="-90"/>
-<wire x1="14.732" y1="3.937" x2="16.002" y2="5.207" width="0.2032" layer="20" curve="-90"/>
+<wire x1="16.002" y1="5.0292" x2="19.812" y2="5.0292" width="0.2032" layer="20"/>
+<wire x1="19.812" y1="5.0292" x2="21.082" y2="3.937" width="0.2032" layer="20" curve="-90"/>
+<wire x1="21.082" y1="3.937" x2="19.812" y2="2.4892" width="0.2032" layer="20" curve="-90"/>
+<wire x1="19.812" y1="2.4892" x2="16.002" y2="2.4892" width="0.2032" layer="20"/>
+<wire x1="16.002" y1="2.4892" x2="14.732" y2="3.937" width="0.2032" layer="20" curve="-90"/>
+<wire x1="14.732" y1="3.937" x2="16.002" y2="5.0292" width="0.2032" layer="20" curve="-90"/>
 <text x="31.496" y="22.479" size="0.8128" layer="21" font="vector" ratio="15" rot="R180">RESET</text>
 <dimension x1="7.62" y1="3.175" x2="0" y2="3.175" x3="3.81" y3="-5.08" textsize="1.016" textratio="15" layer="47" unit="inch" precision="3"/>
 <dimension x1="7.62" y1="3.175" x2="27.94" y2="3.175" x3="17.78" y3="-5.08" textsize="1.016" textratio="15" layer="47" unit="inch" precision="3"/>
@@ -3351,17 +3351,17 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 </pass>
 </autorouter>
 <elements>
-<element name="BT1" library="SparkFun-Batteries" package="BATTERY-AAA-KIT" value="1.2V" x="5.08" y="29.21" rot="MR270">
-<attribute name="SF_SKU" value="PRT-12718" x="5.08" y="29.21" size="1.778" layer="28" rot="MR270" display="off"/>
-<attribute name="PROD_ID" value="BATT-08571" x="5.08" y="29.21" size="1.778" layer="28" rot="MR270" display="off"/>
+<element name="BT1" library="SparkFun-Batteries" package="BATTERY-AAA-KIT" value="1.2V" x="5.08" y="28.956" rot="MR270">
+<attribute name="SF_SKU" value="PRT-12718" x="5.08" y="28.956" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="PROD_ID" value="BATT-08571" x="5.08" y="28.956" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
-<element name="BT2" library="SparkFun-Batteries" package="BATTERY-AAA-KIT" value="1.2V" x="17.78" y="29.21" rot="MR90">
-<attribute name="SF_SKU" value="PRT-12718" x="17.78" y="29.21" size="1.778" layer="28" rot="MR90" display="off"/>
-<attribute name="PROD_ID" value="BATT-08571" x="17.78" y="29.21" size="1.778" layer="28" rot="MR90" display="off"/>
+<element name="BT2" library="SparkFun-Batteries" package="BATTERY-AAA-KIT" value="1.2V" x="17.78" y="28.956" rot="MR90">
+<attribute name="SF_SKU" value="PRT-12718" x="17.78" y="28.956" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="PROD_ID" value="BATT-08571" x="17.78" y="28.956" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
-<element name="BT3" library="SparkFun-Batteries" package="BATTERY-AAA-KIT" value="1.2V" x="30.48" y="29.21" rot="MR270">
-<attribute name="SF_SKU" value="PRT-12718" x="30.48" y="29.21" size="1.778" layer="28" rot="MR270" display="off"/>
-<attribute name="PROD_ID" value="BATT-08571" x="30.48" y="29.21" size="1.778" layer="28" rot="MR270" display="off"/>
+<element name="BT3" library="SparkFun-Batteries" package="BATTERY-AAA-KIT" value="1.2V" x="30.48" y="28.956" rot="MR270">
+<attribute name="SF_SKU" value="PRT-12718" x="30.48" y="28.956" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="PROD_ID" value="BATT-08571" x="30.48" y="28.956" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="C1" library="SparkFun-Capacitors" package="0603" value="0.1uF" x="31.4325" y="32.7025" rot="R270">
 <attribute name="PROD_ID" value="CAP-00810" x="31.4325" y="32.7025" size="1.778" layer="27" rot="R270" display="off"/>
@@ -3543,7 +3543,7 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <via x="10.0965" y="29.2735" extent="1-16" drill="0.381"/>
 <via x="10.0965" y="31.115" extent="1-16" drill="0.381"/>
 <via x="5.1435" y="34.0995" extent="1-16" drill="0.381"/>
-<wire x1="30.48" y1="7.874" x2="22.86" y2="7.874" width="0.508" layer="16"/>
+<wire x1="30.48" y1="7.62" x2="22.86" y2="7.62" width="0.508" layer="16"/>
 <wire x1="21.28" y1="67.51" x2="21.28" y2="56.388" width="0.508" layer="1"/>
 <wire x1="21.28" y1="56.388" x2="22.86" y2="56.388" width="0.508" layer="1"/>
 <wire x1="27.935" y1="33.0835" x2="28.956" y2="33.0835" width="0.254" layer="1"/>
@@ -3783,21 +3783,20 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <signal name="V_BATT">
 <contactref element="BT1" pad="PWR@1"/>
 <contactref element="S2" pad="2"/>
-<wire x1="5.461" y1="38.292925" x2="4.518075" y2="37.35" width="0.508" layer="1"/>
 <wire x1="4.518075" y1="37.35" x2="3.528" y2="37.35" width="0.508" layer="1"/>
-<wire x1="5.461" y1="38.292925" x2="6.985" y2="39.816925" width="0.508" layer="1"/>
-<wire x1="6.985" y1="39.816925" x2="6.985" y2="48.641" width="0.508" layer="1"/>
-<wire x1="6.985" y1="48.641" x2="5.08" y2="50.546" width="0.508" layer="1"/>
+<wire x1="4.518075" y1="37.35" x2="6.985" y2="39.816925" width="0.508" layer="1"/>
+<wire x1="5.08" y1="50.292" x2="6.985" y2="48.387" width="0.508" layer="1"/>
+<wire x1="6.985" y1="48.387" x2="6.985" y2="39.816925" width="0.508" layer="1"/>
 </signal>
 <signal name="N$12">
 <contactref element="BT1" pad="GND@1"/>
 <contactref element="BT2" pad="PWR@1"/>
-<wire x1="17.78" y1="7.874" x2="5.08" y2="7.874" width="0.508" layer="1"/>
+<wire x1="17.78" y1="7.62" x2="5.08" y2="7.62" width="0.508" layer="1"/>
 </signal>
 <signal name="N$13">
 <contactref element="BT2" pad="GND@1"/>
 <contactref element="BT3" pad="PWR@1"/>
-<wire x1="30.48" y1="50.546" x2="17.78" y2="50.546" width="0.508" layer="16"/>
+<wire x1="30.48" y1="50.292" x2="17.78" y2="50.292" width="0.508" layer="16"/>
 </signal>
 <signal name="VIN">
 <contactref element="D4" pad="C"/>
@@ -4014,17 +4013,20 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <approved hash="19,1,e3c269e06b0fe12d"/>
 <approved hash="19,1,f95a0988f179ecd9"/>
 <approved hash="19,1,625d325dae5cfe5c"/>
+<approved hash="6,16,04734b6e4b91048c"/>
+<approved hash="6,16,dbcf9bca9b35db30"/>
+<approved hash="6,16,f2243939393bf226"/>
 <approved hash="19,1,7a237e09272eb685"/>
-<approved hash="19,1,c4335990bc9fd15c"/>
 <approved hash="19,1,2bbd951e8ce5c226"/>
-<approved hash="19,1,eec918eb147de25f"/>
+<approved hash="19,1,c4335990bc9fd15c"/>
 <approved hash="19,1,76d34093fd1798b9"/>
+<approved hash="19,1,eec918eb147de25f"/>
 <approved hash="19,1,031884254cad741d"/>
-<approved hash="19,1,f847ee9fabe1315c"/>
 <approved hash="19,1,bfc98a144f9ef626"/>
+<approved hash="19,1,f847ee9fabe1315c"/>
+<approved hash="19,1,ed1bde578e46b1d5"/>
 <approved hash="19,1,02950a898d786e7b"/>
 <approved hash="19,1,e8c862ea6e7de45f"/>
-<approved hash="19,1,ed1bde578e46b1d5"/>
 <approved hash="19,1,17cb275418b9d177"/>
 <approved hash="19,1,ada217d0b767fef6"/>
 <approved hash="19,1,46a3dfd28011ea83"/>
@@ -4032,12 +4034,12 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <approved hash="19,1,e1422b602981e3a3"/>
 <approved hash="19,1,7e30615fbb603aeb"/>
 <approved hash="19,1,303e0c55441ee691"/>
-<approved hash="19,1,91d41a899e7965cb"/>
 <approved hash="19,1,f94f696d65fbf5d9"/>
 <approved hash="19,1,7e5ad5d79d47a1e5"/>
-<approved hash="6,16,f2243939393bf226"/>
-<approved hash="6,16,04734b6e4b91048c"/>
-<approved hash="6,16,dbcf9bca9b35db30"/>
+<approved hash="19,1,91d41a899e7965cb"/>
+<approved hash="6,16,7ce6b8fbb8f97ce4"/>
+<approved hash="6,16,ae0fee12ee11ae0c"/>
+<approved hash="6,16,7eb339b639b57eb0"/>
 </errors>
 </board>
 </drawing>
