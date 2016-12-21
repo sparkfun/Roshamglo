@@ -17,9 +17,9 @@
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="yes"/>
+<layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
@@ -28,15 +28,15 @@
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
@@ -200,12 +200,6 @@ OUT</text>
 <text x="17.78" y="55.626" size="1.27" layer="22" font="vector" ratio="15" rot="SMR180" align="bottom-center">Hack me! sfe.io/roshamglo</text>
 <text x="17.78" y="48.26" size="1.27" layer="21" font="vector" ratio="15" rot="SR180" align="bottom-center">Work hard. Play hardware.</text>
 <text x="16.51" y="18.415" size="1.778" layer="21" font="vector" ratio="15" rot="SR180" align="bottom-center">sparkfun</text>
-<wire x1="14.605" y1="4.5212" x2="20.955" y2="4.5212" width="0.2032" layer="20"/>
-<wire x1="20.955" y1="4.5212" x2="22.225" y2="3.429" width="0.2032" layer="20" curve="-90"/>
-<wire x1="22.225" y1="3.429" x2="20.955" y2="1.9812" width="0.2032" layer="20" curve="-90"/>
-<wire x1="20.955" y1="1.9812" x2="14.605" y2="1.9812" width="0.2032" layer="20"/>
-<wire x1="14.605" y1="1.9812" x2="13.335" y2="3.429" width="0.2032" layer="20" curve="-90"/>
-<wire x1="13.335" y1="3.429" x2="14.605" y2="4.5212" width="0.2032" layer="20" curve="-90"/>
 <text x="31.496" y="22.479" size="0.8128" layer="21" font="vector" ratio="15" rot="R180">RESET</text>
 <dimension x1="7.62" y1="3.175" x2="0" y2="3.175" x3="3.81" y3="-5.08" textsize="1.016" textratio="15" layer="47" unit="inch" precision="3"/>
 <dimension x1="7.62" y1="3.175" x2="27.94" y2="3.175" x3="17.78" y3="-5.08" textsize="1.016" textratio="15" layer="47" unit="inch" precision="3"/>
@@ -225,6 +219,12 @@ OUT</text>
 LED</text>
 <text x="24.003" y="18.542" size="1.778" layer="21" ratio="30" rot="SR180" align="bottom-center">@</text>
 <text x="-34.29" y="-35.56" size="1.778" layer="51" font="vector" ratio="15" align="center-left">PCB Thickness: 0.078 inch</text>
+<wire x1="21.59" y1="2.032" x2="13.97" y2="2.032" width="0.2032" layer="20"/>
+<wire x1="13.97" y1="2.032" x2="12.7" y2="3.302" width="0.2032" layer="20" curve="-90"/>
+<wire x1="12.7" y1="3.302" x2="13.97" y2="4.572" width="0.2032" layer="20" curve="-90"/>
+<wire x1="13.97" y1="4.572" x2="21.59" y2="4.572" width="0.2032" layer="20"/>
+<wire x1="21.59" y1="4.572" x2="22.86" y2="3.302" width="0.2032" layer="20" curve="-90"/>
+<wire x1="22.86" y1="3.302" x2="21.59" y2="2.032" width="0.2032" layer="20" curve="-90"/>
 </plain>
 <libraries>
 <library name="SparkFun-Batteries">
