@@ -1,7 +1,7 @@
-#include <IntarPhys.h>
+#include <IntarIR.h>
+#include <EEPROM.h>
 
-
-#define USER_ID 0x5A
+IntarIR intar_ir;
 
 
 #define ROCK        0x0F
@@ -16,44 +16,48 @@
 #define LEFT_PIN    PA4
 
 
-#define RED_LED     PA7
-#define GRN_LED     PB2
+#define GRN_LED     PA7
+#define RED_LED     PB2
 #define IR_LED      PA5
 #define IR_REC      PA3
 
 
 volatile bool interrupted = 0;
-volatile uint8_t selection = 0;
+volatile uint8_t selection;
 volatile uint8_t count = 0;
 
 uint8_t mode=0;
 
 // Shot packet message
-uint8_t shot_packet[] = {USER_ID, 0x00, 0x00, 0xED};
-uint8_t shot_packet_size = 4;
+byte shot_packet[4];
+const byte shot_packet_size = 4;
 
 // Packet buffer
-uint8_t packet[MAX_PACKET_SIZE];
-uint8_t num_bytes;
+byte packet[MAX_PACKET_SIZE];
+byte num_bytes;
+
+uint8_t myID;
 
 
 void setup() {
   // Configure IR LED, RED LED, and GRN LED as outputs
-  DDRA = (1<<IR_LED)|(1<<RED_LED);
-  DDRB = (1<<GRN_LED);
+  DDRA = (1<<IR_LED)|(1<<GRN_LED);
+  DDRB = (1<<RED_LED);
 
   // Enable pullup resistors for 5-way switch
-  PORTA = 0x57;
-    
+  PORTA = (1<<LEFT_PIN)|(1<<RIGHT_PIN)|(UP_PIN)|(DOWN_PIN)|(CENTER_PIN);
+
   // Enable external interrupts on joystick pins UP, LEFT, and RIGHT
   GIMSK = (1<<PCIE0);   // Enable Pin Change Interrupts on Port A
   PCMSK0 = (1<<UP_PIN)|(1<<LEFT_PIN)|(1<<RIGHT_PIN);
 
   // Initialize IR receiver/transmitter
-  Intar_Phys.begin(3);
-  Intar_Phys.enableTransmitter();
-  Intar_Phys.enableReceiver();
+  intar_ir.begin(3);
+  intar_ir.enableTransmitter();
+  intar_ir.enableReceiver();
 
+  myID = EEPROM.read(0);
+  
   sei(); //Enable interrupts
 }
 
@@ -88,9 +92,25 @@ void Standby(void)
   // Wait for button to be pressed
   if(interrupted)
   {
-    shot_packet[1] = selection; // Load button pressed to transmission packet
     mode = 1; // User wants to play
+
+    shot_packet[0] = myID;
+    shot_packet[1] = selection; // Load button pressed to transmission packet
+    shot_packet[2] = 0;
+    shot_packet[3] = 0xED;
   }
+}
+
+void timerDelay(uint8_t amount)
+{
+  // Start timer0 (used to generate delays)
+    TCCR0A = 0x00;  //Clear TCCR0A
+    TCCR0B = (1<<CS02)|(1<<CS00); // Set clock prescale to clk/1024
+    TCNT0 = 0x00;  // Reset counter
+    TIMSK0 |= (1 << OCIE0A);  // Enable timer0 interrupt
+    count = 0;  // count is updated when the timer overflows (happens appox. every 32ms)
+    
+    while(count < amount); // delay = amount * 32ms
 }
 
 
@@ -99,36 +119,28 @@ void Standby(void)
 void Gameplay(void)
 {
   uint8_t gameResult = 0; // 0-TIE, 1-WIN, 2-LOSE
-  bool transmit = 1;      // Start talking to opponent
   uint8_t theirMove=0;    // Place we'll store our opponent's move
-  
+  uint8_t myDelay = random(3);
+  //Initialization
   if(interrupted)
   {
-    // Reset values of previous game
-    packet[0] = 0;
-    packet[1] = 0;
-    packet[2] = 0;
-    packet[3] = 0;
-    
-    // Start timer0 (used to generate delays)
-    TCCR0A = 0x00;  //Clear TCCR0A
-    TCCR0B = (1<<CS02)|(1<<CS00); // Set clock prescale to clk/1024
-    TCNT0 = 0x00;  // Reset counter
-    TIMSK0 |= (1 << OCIE0A);  // Enable timer0 interrupt
-    count = 0;  // count is updated when the timer overflows (happens appox. every 32ms)
+    intar_ir.enableReceiver();
+    interrupted = 0;
   }
+
+  timerDelay(myDelay);
   
   // Read opponent's data
-  if(Intar_Phys.available())
+  if(intar_ir.available())
   {
     memset(packet, 0, MAX_PACKET_SIZE);   // Load data received to packet[]
-    num_bytes = Intar_Phys.read(packet);  // Number of bytes received
+    num_bytes = intar_ir.read(packet);  // Number of bytes received
     
     if(num_bytes!=0 && num_bytes!=RECV_ERROR)   // Valid packet
     {
-      if(packet[0]!=USER_ID && packet[3]==0xED) // Must be opponent's data, so read what they sent
+      if(packet[0]!=myID && packet[3]==0xED) // Must be opponent's data, so read what they sent
       {
-        PORTA |= (1<<RED_LED);  // Turn on LED
+        PORTB |= (1<<RED_LED);  // Turn on LED
         shot_packet[2] = 1;     // Set acknowledge
 
         if(packet[2]==1 || packet[2]==2) // Opponent has recieved our move
@@ -136,43 +148,37 @@ void Gameplay(void)
           shot_packet[2] = 2;     // Update acknowledge
           theirMove = packet[1];  // Store our opponent's move
         }
-
-        // Wait for 64ms (so we can see the LED)
-        count = 0;        // Reset count
-        TCNT0 = 0;        // Reset timer
-        while(count < 2); // Wait ~64ms
-        
-        PORTA &= ~(1<<RED_LED); // Turn off LED
+        timerDelay(1);
+        PORTB &= ~(1<<RED_LED); // Turn off LED
       }
-    }
+    }    
   }
 
   // Transmit our data
-  if(transmit)
-  {
-    Intar_Phys.disableReceiver(); // Disable receiver so we don't read our own data
-    PORTB |= (1<<GRN_LED);        // Turn on LED
-    Intar_Phys.xmit(shot_packet, shot_packet_size); // Transmit our data
-    Intar_Phys.xmit(shot_packet, shot_packet_size); // Transmit again for good measure
-    PORTB &= ~(1<<GRN_LED);       // Turn off LED
-    Intar_Phys.flushXmit();
-    Intar_Phys.enableReceiver();  // Start listening for opponent's data again
-    
-    // Wait for 100ms 
-    count = 0;        // Reset count
-    TCNT0 = 0;        // Reset timer
-    while(count < 3); // Wait ~100ms
-  }
+  intar_ir.disableReceiver(); // Disable receiver so we don't read our own data
+  PORTA |= (1<<GRN_LED);        // Turn on LED
+  intar_ir.send(shot_packet, shot_packet_size); // Transmit our data
+  intar_ir.enableReceiver();  // Start listening for opponent's data again
+  
+  // Wait for 64ms (so we can see the LED)
+  timerDelay(1);
+  
+  intar_ir.disableReceiver(); // Disable receiver so we don't read our own data
+  intar_ir.send(shot_packet, shot_packet_size); // Transmit again for good measure
+  PORTA &= ~(1<<GRN_LED);       // Turn off LED
+  intar_ir.flushTransmitter();
+  intar_ir.enableReceiver();  // Start listening for opponent's data again
+  
+  // Wait for 100ms 
+  timerDelay(9);
   
   // Both sides have all the info they need. Display results
   if(packet[2]==2 && shot_packet[2] == 2)
   {
-    transmit = 0; // Stop transmitting
-
+    intar_ir.disableReceiver();
+    
     // Wait for 1000ms before displaying results
-    count = 0;          // Reset count
-    TCNT0 = 0;          // Reset timer
-    while(count < 32);  // Wait ~1000ms
+    timerDelay(32);
 
     // Figure out if we won/lost/tied
     switch(theirMove)
@@ -224,53 +230,78 @@ void Gameplay(void)
         break;
     }
 
+    if(packet[0] == EEPROM.read(0x01))
+    {
+      if((EEPROM.read(0x02)+1) > 4)
+      {
+        gameResult = 3;
+      }
+      else
+      {
+        EEPROM.write(0x02,EEPROM.read(0x02)+1);
+      }
+    }
+    else
+    {
+      EEPROM.write(0x01,packet[0]);
+      EEPROM.write(0x02,0x00);
+    }
+
     // Display the results
     switch(gameResult)
     {
       case(0):  // Tie
-        PORTA &= ~(1<<RED_LED);   // Turn off led
-        PORTB |= (1<<GRN_LED);    // Turn on led
+        PORTB &= ~(1<<RED_LED);   // Turn off led
+        PORTA |= (1<<GRN_LED);    // Turn on led
 
         // Alternate RED/GRN LEDs for ~2000ms
         for(uint8_t i=0;i<20;i++)
         {
           // Wait 100ms
-          count = 0;              // Reset count
-          TCNT0 = 0x00;           // Reset timer
-          while(count < 3);       // ~100ms delay
-          PORTA ^= (1<<RED_LED);  // Switch LED state
-          PORTB ^= (1<<GRN_LED);  // Switch LED state
+          timerDelay(3);
+          PORTB ^= (1<<RED_LED);  // Switch LED state
+          PORTA ^= (1<<GRN_LED);  // Switch LED state
         }
         PORTB &= ~(1<<GRN_LED);   // Turn LED off
         break;
         
       case(1):  // Win
-        PORTA &= ~(1<<RED_LED);   // Turn off RED LED
-        PORTB |= (1<<GRN_LED);    // Turn on GRN LED
+        PORTB &= ~(1<<RED_LED);   // Turn off RED LED
+        PORTA |= (1<<GRN_LED);    // Turn on GRN LED
 
         // Wait for 2000ms
-        count = 0;                // Reset count
-        TCNT0 = 0x00;             // Reset timer
-        while(count < 61);        // ~2000ms delay
+        timerDelay(61);
         break;
         
       case(2):  // Lose
-        PORTB &= ~(1<<GRN_LED);   // Turn on LED
-        PORTA |= (1<<RED_LED);    // Turn off LED
+        PORTA &= ~(1<<GRN_LED);   // Turn on LED
+        PORTB |= (1<<RED_LED);    // Turn off LED
 
         // Wait for 2000ms
-        count = 0;                // Reset count
-        TCNT0 = 0x00;             // Reset timer
-        while(count < 61);        // ~2000ms delay
+        timerDelay(61);
         break;
-        
+      case(3):
+        for(uint8_t i=0;i<10;i++)
+        {
+          // Wait 100ms
+          timerDelay(3);
+          PORTB ^= (1<<RED_LED);  // Switch LED state
+        }
+        PORTB &= ~(1<<RED_LED); // Make sure LED is off
+        break;
+              
       default:
         break;
     }
-    PORTB &= ~(1<<GRN_LED); // Turn off LED
-    PORTA &= ~(1<<RED_LED); // Turn off LED
+    PORTA &= ~(1<<GRN_LED); // Turn off LED
+    PORTB &= ~(1<<RED_LED); // Turn off LED
+    
     mode = 0;               // Return to standby
-    interrupted = 0;        // Reset variable
+
+    packet[0] = 0x00;
+    packet[1] = 0x00;
+    packet[2] = 0x00;
+    packet[3] = 0x00;
   }
 }
 
@@ -280,7 +311,18 @@ void Scoreboard()
   
 }
 
-
+//void blinkPin(amount)
+//{
+//  for(int i=0;i<amount;i++)
+//  {
+//    PORTA |= (1<<PA0);
+//    PORTA &= ~(1<<PA0);
+//  }
+//
+//  count = 0;        // Reset count
+//  TCNT0 = 0;        // Reset timer
+//  while(count < 1); // Wait ~64ms
+//}
 
 // Pin Change Interrupt Service / only runs when UP, LEFT, or RIGHT is pressed
 ISR(PCINT0_vect)
