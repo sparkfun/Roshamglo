@@ -20054,27 +20054,6 @@ It has a reduced top mask to make it harder to install upside-down.</description
 </device>
 </devices>
 </deviceset>
-<deviceset name="2.2KOHM" prefix="R">
-<description>&lt;h3&gt;2.2kΩ resistor&lt;/h3&gt;
-&lt;p&gt;A resistor is a passive two-terminal electrical component that implements electrical resistance as a circuit element. Resistors act to reduce current flow, and, at the same time, act to lower voltage levels within circuits. - Wikipedia&lt;/p&gt;</description>
-<gates>
-<gate name="G$1" symbol="RESISTOR" x="0" y="0"/>
-</gates>
-<devices>
-<device name="-0603-1/10W-1%" package="0603">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-08272"/>
-<attribute name="VALUE" value="2.2k"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="100OHM" prefix="R">
 <description>&lt;h3&gt;100Ω resistor&lt;/h3&gt;
 &lt;p&gt;A resistor is a passive two-terminal electrical component that implements electrical resistance as a circuit element. Resistors act to reduce current flow, and, at the same time, act to lower voltage levels within circuits. - Wikipedia&lt;/p&gt;</description>
@@ -23049,7 +23028,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </part>
 <part name="SUPPLY9" library="SparkFun-Aesthetics" deviceset="3.3V" device=""/>
 <part name="SUPPLY13" library="SparkFun-PowerSymbols" deviceset="VIN" device=""/>
-<part name="R6" library="SparkFun-Resistors" deviceset="2.2KOHM" device="-0603-1/10W-1%" value="2.2k"/>
+<part name="R6" library="SparkFun-Resistors" deviceset="1.5KOHM" device="-0603-1/10W-1%" value="1.5k"/>
 <part name="FD1" library="SparkFun-Aesthetics" deviceset="FIDUCIAL" device="UFIDUCIAL"/>
 <part name="FD2" library="SparkFun-Aesthetics" deviceset="FIDUCIAL" device="UFIDUCIAL"/>
 <part name="LOGO1" library="SparkFun-Aesthetics" deviceset="OSHW-LOGO" device="S"/>
@@ -23107,7 +23086,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="58.42" y1="35.56" x2="0" y2="35.56" width="0.2032" layer="97" style="shortdash"/>
 <text x="172.466" y="11.176" size="2.54" layer="94">Alex Wende</text>
 <text x="172.466" y="6.604" size="2.54" layer="94">Shawn Hymel</text>
-<text x="239.268" y="7.112" size="2.54" layer="94">v02</text>
+<text x="239.268" y="7.112" size="2.54" layer="94">v10</text>
 <text x="129.54" y="116.84" size="2.54" layer="94">IO Breakout</text>
 <wire x1="127" y1="121.92" x2="127" y2="35.56" width="0.2032" layer="97" style="shortdash"/>
 <text x="180.34" y="99.06" size="1.778" layer="97">Cut JP1/2 to
@@ -23227,11 +23206,11 @@ LED power indicator.</text>
 <pinref part="SUPPLY7" gate="G$1" pin="3.3V"/>
 <wire x1="99.06" y1="81.28" x2="99.06" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="83.82" x2="99.06" y2="86.36" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="76.2" x2="106.68" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="83.82" x2="99.06" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="76.2" x2="104.14" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="83.82" x2="99.06" y2="83.82" width="0.1524" layer="91"/>
 <junction x="99.06" y="83.82"/>
 <pinref part="J1" gate="G$1" pin="2"/>
-<wire x1="109.22" y1="76.2" x2="106.68" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="76.2" x2="104.14" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="SUPPLY10" gate="G$1" pin="3.3V"/>
@@ -23678,15 +23657,15 @@ LED power indicator.</text>
 </net>
 <net name="N$14" class="0">
 <segment>
-<wire x1="106.68" y1="73.66" x2="106.68" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="73.66" x2="104.14" y2="68.58" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="1"/>
 <pinref part="D6" gate="G$1" pin="A"/>
 <wire x1="99.06" y1="71.12" x2="99.06" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="68.58" x2="99.06" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="68.58" x2="99.06" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="68.58" x2="99.06" y2="68.58" width="0.1524" layer="91"/>
 <junction x="99.06" y="68.58"/>
 <pinref part="J1" gate="G$1" pin="1"/>
-<wire x1="106.68" y1="73.66" x2="109.22" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="73.66" x2="109.22" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$1" class="0">
