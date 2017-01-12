@@ -26,7 +26,7 @@
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
-<layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
@@ -3563,8 +3563,8 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <element name="U3" library="SparkFun-PowerIC" package="SOT23-5" value="AP2112K-3.3V" x="6.096" y="31.1785" rot="R180">
 <attribute name="PROD_ID" value="VREG-12457" x="13.716" y="27.3685" size="1.778" layer="27" font="vector" ratio="15" rot="R180" display="off"/>
 </element>
-<element name="R6" library="SparkFun-Resistors" package="0603" value="2.55k" x="5.842" y="54.0385">
-<attribute name="PROD_ID" value="RES-11227" x="5.842" y="54.0385" size="1.778" layer="27" font="vector" ratio="15" display="off"/>
+<element name="R6" library="SparkFun-Resistors" package="0603" value="2.2k" x="5.842" y="54.0385">
+<attribute name="PROD_ID" value="RES-08272" x="5.842" y="54.0385" size="1.778" layer="27" font="vector" ratio="15" display="off"/>
 </element>
 <element name="FD1" library="SparkFun-Aesthetics" package="FIDUCIAL-MICRO" value="FIDUCIALUFIDUCIAL" x="1.27" y="53.975"/>
 <element name="FD2" library="SparkFun-Aesthetics" package="FIDUCIAL-MICRO" value="FIDUCIALUFIDUCIAL" x="34.29" y="1.27"/>
