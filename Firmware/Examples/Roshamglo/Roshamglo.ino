@@ -53,10 +53,12 @@ IntarIR intar_ir;
 volatile bool interrupted = 0;  // Interrupt flag used to initialize functions
 volatile uint8_t selection;     // Used to convert switch presses to action values
 volatile uint8_t count = 0;     // Used for timer0 ISR
+volatile bool endTask = 0;
 
 uint8_t attempt = 0;
 uint8_t mode=0;                 // 0-Standby, 1-Gameplay, 2-Dump Scores
 uint16_t myID;                   // ID of this badge
+uint16_t opponentID;
 
 // Message we'll send to opponent
 byte shot_packet[4];
@@ -92,6 +94,10 @@ void setup() {
   myID = (myID_H<<8) + myID_L; // Combine the 8-bit addresses
 
   wdtSetup();
+
+  PORTA |= (1<<GRN_LED);
+  timerDelay(31);
+  PORTA &= ~(1<<GRN_LED);
   
   sei(); // Enable global interrupts
 }
@@ -143,7 +149,6 @@ void Standby(void)
     else
     {
       mode = 1; // User wants to play
-      attempt = 0;
       
       shot_packet[0] = myID >> 8;
       shot_packet[1] = myID & 0xFF;
@@ -165,6 +170,7 @@ void Gameplay(void)
   {
     intar_ir.enableReceiver();
     interrupted = 0;
+    attempt = 0;
   }
 
   while(!sample_waiting); // Wait for new random number to be generated in ISR
@@ -325,17 +331,35 @@ void Gameplay(void)
     packet[1] = 0x00;
     packet[2] = 0x00;
     packet[3] = 0x00;
+    opponentID = 0;
   }
 
   attempt++;
   if(attempt > 30)
   {     
     mode = 0; // Return to standby
-    
+    attempt = 0;
     packet[0] = 0x00;
     packet[1] = 0x00;
     packet[2] = 0x00;
     packet[3] = 0x00;
+    opponentID = 0;
+  }
+
+  if(endTask && attempt > 3)
+  {
+    mode = 0; // Return to standby
+    attempt = 0;
+    packet[0] = 0x00;
+    packet[1] = 0x00;
+    packet[2] = 0x00;
+    packet[3] = 0x00;
+    opponentID = 0;
+    endTask = 0;
+  }
+  else
+  {
+    endTask = 0;
   }
 }
 
@@ -349,6 +373,7 @@ void Dumpscore(void)
   {
     intar_ir.enableReceiver();
     interrupted = 0;
+    attempt = 0;
   }
 
   // Read opponent's data
@@ -378,6 +403,44 @@ void Dumpscore(void)
     packet[1] = 0x00;
     packet[2] = 0x00;
     packet[3] = 0x00;
+
+    opponentID = 0;
+
+    PORTA |= (1<<GRN_LED);  // Turn on GRN LED
+    timerDelay(61);         // Wait for 2000ms
+    PORTA &= ~(1<<GRN_LED); // Turn off LED
+  }
+
+  attempt++;
+  if(attempt > 20)
+  {
+    mode = 0; // Return to standby
+    attempt = 0;
+    packet[0] = 0x00;
+    packet[1] = 0x00;
+    packet[2] = 0x00;
+    packet[3] = 0x00;
+    opponentID = 0;
+    
+    PORTB |= (1<<RED_LED);  // Turn on GRN LED
+    timerDelay(61);         // Wait for 2000ms
+    PORTB &= ~(1<<RED_LED); // Turn off LED
+  }
+
+  if(endTask && attempt > 2)
+  {
+    mode = 0; // Return to standby
+    attempt = 0;
+    packet[0] = 0x00;
+    packet[1] = 0x00;
+    packet[2] = 0x00;
+    packet[3] = 0x00;
+    opponentID = 0;
+    endTask = 0;
+  }
+  else
+  {
+    endTask = 0;
   }
 }
 
@@ -394,6 +457,15 @@ void Displayscore(void)
       timerDelay(15);
       PORTA &= ~(1<<GRN_LED);
       timerDelay(15);
+
+      if(endTask && i>0)
+      {
+        break;
+      }
+      else
+      {
+        endTask = 0;
+      }
     }
   }
   else
@@ -405,6 +477,7 @@ void Displayscore(void)
 
   interrupted = 0;
   mode = 0;
+  endTask = 0;
 }
 
 
@@ -451,16 +524,23 @@ uint8_t readData(void)
       
     if(playerID != myID) // Must be opponent's data, so read what they sent
     {
-      PORTB |= (1<<RED_LED);  // Turn on LED
-      shot_packet[3] = 1;     // Set acknowledge
-
-      if(packet[3]==1 || packet[3]==2) // Opponent has recieved our move
+      if(opponentID == 0)
       {
-        shot_packet[3] = 2;     // Update acknowledge
-        theirMove = packet[2];  // Store our opponent's move
+        opponentID = playerID;
       }
-      //timerDelay(1);
-      PORTB &= ~(1<<RED_LED); // Turn off LED
+      if(playerID == opponentID)
+      {
+        PORTB |= (1<<RED_LED);  // Turn on LED
+        shot_packet[3] = 1;     // Set acknowledge
+  
+        if(packet[3]==1 || packet[3]==2) // Opponent has recieved our move
+        {
+          shot_packet[3] = 2;     // Update acknowledge
+          theirMove = packet[2];  // Store our opponent's move
+        }
+        //timerDelay(1);
+        PORTB &= ~(1<<RED_LED); // Turn off LED
+      }
     }
   }
   return theirMove;
@@ -496,36 +576,63 @@ ISR(WDT_vect)
 
 // Pin Change Interrupt Service / only runs when UP, LEFT, or RIGHT is pressed
 ISR(PCINT0_vect)
-{ 
-  //Change interrupted only if button is LOW
-  if(!(PINA & (1<<RIGHT_PIN)))      //Right - Scissors
+{
+  if(mode == 0)
   {
-    selection = SCISSORS;
-    interrupted = 1;
+    //Change interrupted only if button is LOW
+    if(!(PINA & (1<<RIGHT_PIN)))      //Right - Scissors
+    {
+      selection = SCISSORS;
+      interrupted = 1;
+    }
+    else if(!(PINA & (1<<UP_PIN)))    //Up - Paper
+    {
+      selection = PAPER;
+      interrupted = 1;
+    }
+    else if(!(PINA & (1<<LEFT_PIN)))  //Left - Rock
+    {
+      selection = ROCK;
+      interrupted = 1;
+    }
+    else if(!(PINA & (1<<DOWN_PIN)))  //Down - Upload score to scoreboard
+    {
+      selection = UPLOAD_SCORE;
+      interrupted = 1;
+    }
+    else if(!(PINA & (1<<CENTER_PIN)))  //Center - Display Score
+    {
+      selection = DISPLAY_SCORE;
+      interrupted = 1;
+    }
+    else                              //Error - shouldn't ever happen
+    {
+      selection = 0;
+    }
   }
-  else if(!(PINA & (1<<UP_PIN)))    //Up - Paper
+  else
   {
-    selection = PAPER;
-    interrupted = 1;
-  }
-  else if(!(PINA & (1<<LEFT_PIN)))  //Left - Rock
-  {
-    selection = ROCK;
-    interrupted = 1;
-  }
-  else if(!(PINA & (1<<DOWN_PIN)))  //Down - Upload score to scoreboard
-  {
-    selection = UPLOAD_SCORE;
-    interrupted = 1;
-  }
-  else if(!(PINA & (1<<CENTER_PIN)))  //Center - Display Score
-  {
-    selection = DISPLAY_SCORE;
-    interrupted = 1;
-  }
-  else                              //Error - shouldn't ever happen
-  {
-    selection = 0;
+    //Change endTask only if button is LOW
+    if(!(PINA & (1<<RIGHT_PIN)))      //Right - Scissors
+    {
+      endTask = 1;
+    }
+    else if(!(PINA & (1<<UP_PIN)))    //Up - Paper
+    {
+      endTask = 1;
+    }
+    else if(!(PINA & (1<<LEFT_PIN)))  //Left - Rock
+    {
+      endTask = 1;
+    }
+    else if(!(PINA & (1<<DOWN_PIN)))  //Down - Upload score to scoreboard
+    {
+      endTask = 1;
+    }
+    else if(!(PINA & (1<<CENTER_PIN)))  //Center - Display Score
+    {
+      endTask = 1;
+    }
   }
 }
 
