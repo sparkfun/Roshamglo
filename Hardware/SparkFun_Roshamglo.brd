@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.005" altunitdist="inch" altunit="inch"/>
+<grid distance="0.001" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.0001" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
@@ -17,9 +17,9 @@
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="yes"/>
+<layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
@@ -34,7 +34,7 @@
 <layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
@@ -229,7 +229,7 @@ TOWARD ENEMY</text>
 <wire x1="17.78" y1="60.706" x2="17.78" y2="63.5" width="0.254" layer="21"/>
 <wire x1="17.78" y1="63.5" x2="18.542" y2="62.611" width="0.254" layer="21"/>
 <wire x1="17.78" y1="63.5" x2="17.018" y2="62.611" width="0.254" layer="21"/>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="24.21529375" y="17.157421875"/>
 <vertex x="24.343690625" y="17.170121875"/>
 <vertex x="24.460403125" y="17.206621875"/>
@@ -266,7 +266,7 @@ TOWARD ENEMY</text>
 <vertex x="24.04219375" y="17.181728125"/>
 <vertex x="24.21541875" y="17.15734375"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="23.73109375" y="17.817996875"/>
 <vertex x="23.743996875" y="17.817996875"/>
 <vertex x="23.74933125" y="17.879721875"/>
@@ -299,7 +299,7 @@ TOWARD ENEMY</text>
 <vertex x="23.73104375" y="18.197728125"/>
 <vertex x="23.73104375" y="17.818125"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="24.11691875" y="16.655009375"/>
 <vertex x="24.361215625" y="16.6774125"/>
 <vertex x="24.5863125" y="16.74213125"/>
@@ -2151,7 +2151,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <text x="-1.27" y="-1.905" size="0.6096" layer="27">&gt;VALUE</text>
 </package>
 <package name="ROSHAMGLO_PAPER">
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.773096875" y="0.8056375"/>
 <vertex x="-1.009115625" y="0.805765625"/>
 <vertex x="-1.009115625" y="0.422121875"/>
@@ -2159,7 +2159,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.889378125" y="0.6453375"/>
 <vertex x="-1.85376875" y="0.7246875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.018996875" y="1.562253125"/>
 <vertex x="-1.029665625" y="1.551584375"/>
 <vertex x="-1.121284375" y="1.459584375"/>
@@ -2177,7 +2177,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.01871875" y="1.021384375"/>
 <vertex x="-1.01871875" y="1.56240625"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.507996875" y="0.427709375"/>
 <vertex x="-1.889378125" y="0.427709375"/>
 <vertex x="-1.889378125" y="0.389840625"/>
@@ -2192,7 +2192,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.507996875" y="0.167690625"/>
 <vertex x="-1.507996875" y="0.2977125"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.507996875" y="-0.16395625"/>
 <vertex x="-1.889378125" y="-0.16395625"/>
 <vertex x="-1.889378125" y="-0.273303125"/>
@@ -2234,7 +2234,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.508253125" y="-0.221971875"/>
 <vertex x="-1.508253125" y="-0.16395625"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.018996875" y="-1.88950625"/>
 <vertex x="-0.913384375" y="-1.88950625"/>
 <vertex x="-0.782421875" y="-1.88950625"/>
@@ -2408,7 +2408,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </polygon>
 </package>
 <package name="ROSHAMGLO_ROCK">
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.781225" y="0.34490625"/>
 <vertex x="-1.428240625" y="0.345440625"/>
 <vertex x="-1.508378125" y="0.1848875"/>
@@ -2423,7 +2423,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.82681875" y="0.23210625"/>
 <vertex x="-1.807615625" y="0.293571875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.43545625" y="1.03139375"/>
 <vertex x="-1.047675" y="1.03139375"/>
 <vertex x="-1.025653125" y="1.05605625"/>
@@ -2454,7 +2454,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.39103125" y="1.11968125"/>
 <vertex x="-1.435709375" y="1.031265625"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.43545625" y="1.03139375"/>
 <vertex x="-1.450771875" y="1.0009875"/>
 <vertex x="-1.5105125" y="0.88231875"/>
@@ -2474,7 +2474,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.0478" y="1.03139375"/>
 <vertex x="-1.43558125" y="1.03139375"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="0.60213125" y="1.550796875"/>
 <vertex x="0.60213125" y="1.88150625"/>
 <vertex x="0.561059375" y="1.890571875"/>
@@ -2498,7 +2498,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="0.56548125" y="1.57279375"/>
 <vertex x="0.601878125" y="1.550796875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="0.60213125" y="1.550796875"/>
 <vertex x="0.609471875" y="1.546403125"/>
 <vertex x="0.6532125" y="1.490396875"/>
@@ -2523,7 +2523,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="0.60200625" y="1.881759375"/>
 <vertex x="0.60200625" y="1.55105"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="1.29661875" y="1.0676625"/>
 <vertex x="0.870584375" y="1.0676625"/>
 <vertex x="0.95765625" y="0.972590625"/>
@@ -2560,7 +2560,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="1.345690625" y="1.01391875"/>
 <vertex x="1.29661875" y="1.06794375"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-0.562659375" y="1.040740625"/>
 <vertex x="-0.94579375" y="1.040740625"/>
 <vertex x="-0.9293875" y="1.0183375"/>
@@ -2611,7 +2611,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-0.5604" y="1.036471875"/>
 <vertex x="-0.562128125" y="1.041121875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="1.773353125" y="-0.2801125"/>
 <vertex x="1.412646875" y="-0.2801125"/>
 <vertex x="1.389965625" y="-0.320496875"/>
@@ -2712,7 +2712,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </polygon>
 </package>
 <package name="ROSHAMGLO_SCISSORS">
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-2.092325" y="-0.96558125"/>
 <vertex x="-1.70388125" y="-0.96558125"/>
 <vertex x="-1.708278125" y="-0.981990625"/>
@@ -2748,7 +2748,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-2.103653125" y="-1.197484375"/>
 <vertex x="-2.11899375" y="-1.080796875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.69855" y="1.889303125"/>
 <vertex x="-1.771878125" y="1.87530625"/>
 <vertex x="-1.8358875" y="1.832634375"/>
@@ -2927,7 +2927,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.624940625" y="1.87436875"/>
 <vertex x="-1.69826875" y="1.8883625"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="2.092325" y="-0.967715625"/>
 <vertex x="1.70388125" y="-0.967715625"/>
 <vertex x="1.708278125" y="-0.984121875"/>
@@ -2965,13 +2965,13 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </polygon>
 </package>
 <package name="ROSHAMGLO_LOGO_0.4">
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-2.813153125" y="-1.946553125"/>
 <vertex x="-2.812440625" y="-2.12364375"/>
 <vertex x="-2.990596875" y="-2.124"/>
 <vertex x="-2.81350625" y="-1.946553125"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-2.45150625" y="-1.68163125"/>
 <vertex x="-1.10698125" y="-1.68554375"/>
 <vertex x="-1.106271875" y="-3.82874375"/>
@@ -2983,7 +2983,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-2.474975" y="-2.38963125"/>
 <vertex x="-2.45470625" y="-2.326334375"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-5.36138125" y="-3.930090625"/>
 <vertex x="-3.609696875" y="-3.930446875"/>
 <vertex x="-3.609696875" y="-4.009034375"/>
@@ -2991,7 +2991,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-3.598315625" y="-5.03991875"/>
 <vertex x="-6.001815625" y="-5.03991875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="1.08386875" y="-3.195778125"/>
 <vertex x="0.955853125" y="-3.19044375"/>
 <vertex x="0.830325" y="-3.227425"/>
@@ -3002,7 +3002,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="0.641146875" y="-3.70641875"/>
 <vertex x="1.1325875" y="-3.21426875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="2.61188125" y="-3.197909375"/>
 <vertex x="2.739896875" y="-3.192578125"/>
 <vertex x="2.865425" y="-3.229559375"/>
@@ -3013,7 +3013,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="3.054603125" y="-3.708553125"/>
 <vertex x="2.563165625" y="-3.216403125"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-1.27518125" y="0.79725625"/>
 <vertex x="-1.253134375" y="0.856284375"/>
 <vertex x="-0.91566875" y="1.523390625"/>
@@ -3081,7 +3081,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-1.27909375" y="0.678840625"/>
 <vertex x="-1.2851375" y="0.7357375"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-3.10545625" y="-0.020625"/>
 <vertex x="-1.375459375" y="-0.020625"/>
 <vertex x="-1.406753125" y="0.13939375"/>
@@ -3169,7 +3169,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-3.052471875" y="0.071475"/>
 <vertex x="-3.1051" y="-0.02026875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-3.10545625" y="-0.020625"/>
 <vertex x="-3.226359375" y="-0.22971875"/>
 <vertex x="-3.3995375" y="-0.5302"/>
@@ -3196,7 +3196,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-2.17058125" y="-0.02098125"/>
 <vertex x="-3.10474375" y="-0.02098125"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-4.52714375" y="-2.481378125"/>
 <vertex x="-4.614978125" y="-2.634284375"/>
 <vertex x="-4.788153125" y="-2.934765625"/>
@@ -3212,7 +3212,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-3.608984375" y="-2.48173125"/>
 <vertex x="-4.52643125" y="-2.48173125"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-3.605071875" y="-5.03991875"/>
 <vertex x="-3.532175" y="-5.03991875"/>
 <vertex x="-3.178353125" y="-5.03991875"/>
@@ -3231,7 +3231,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-3.605071875" y="-4.0346375"/>
 <vertex x="-3.605071875" y="-5.03920625"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="-2.17129375" y="-5.03991875"/>
 <vertex x="-2.11973125" y="-5.03991875"/>
 <vertex x="-1.766621875" y="-5.03991875"/>
@@ -3337,7 +3337,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <vertex x="-2.170228125" y="-4.186834375"/>
 <vertex x="-2.170228125" y="-5.038496875"/>
 </polygon>
-<polygon width="0" layer="21">
+<polygon width="0.0254" layer="21">
 <vertex x="3.103321875" y="-0.018846875"/>
 <vertex x="1.8437875" y="-0.018846875"/>
 <vertex x="1.8437875" y="-2.497378125"/>
