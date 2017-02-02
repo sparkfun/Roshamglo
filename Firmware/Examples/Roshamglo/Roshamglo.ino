@@ -23,18 +23,22 @@ IntarIR intar_ir;
 
 // Memory Addresses
 #define ID_HIGH_ADDRESS     0x00
-#define ID_LOW_ADDRESS      0x01
-#define LAST_ID_H           0x02
-#define LAST_ID_L           0x03
-#define PLAY_COUNT_ADDRESS  0x04
-#define SCORE_ADDRESS       0x05
+#define ID_MIDDLE_ADDRESS   0x01
+#define ID_LOW_ADDRESS      0x02
+
+#define LAST_ID_H           0x03
+#define LAST_ID_M           0x04
+#define LAST_ID_L           0x05
+
+#define PLAY_COUNT_ADDRESS  0x06
+#define SCORE_ADDRESS       0x07
 
 // Action Values
-#define ROCK                0x01
-#define PAPER               0x02
-#define SCISSORS            0x03
-#define UPLOAD_SCORE        0x10
-#define DISPLAY_SCORE       0x11
+#define ROCK                0x10
+#define PAPER               0x20
+#define SCISSORS            0x30
+#define UPLOAD_SCORE        0xA0
+#define DISPLAY_SCORE       0xB0
 
 // 5-way Switch Defines
 #define DOWN_PIN            PA0
@@ -57,8 +61,8 @@ volatile bool endTask = 0;
 
 uint8_t attempt = 0;
 uint8_t mode=0;                 // 0-Standby, 1-Gameplay, 2-Dump Scores
-uint16_t myID;                   // ID of this badge
-uint16_t opponentID;
+uint32_t myID;                   // ID of this badge
+uint32_t opponentID;
 
 // Message we'll send to opponent
 byte shot_packet[4];
@@ -71,7 +75,8 @@ volatile uint8_t sample = 0;
 volatile bool sample_waiting = 0;
 
 void setup() {
-  uint8_t myID_H, myID_L;  // Badge ID High and Low bytes
+  uint32_t myID_H, myID_M, myID_L;  // Badge ID High, Middle, and Low bytes
+  
   // Set pins as outputs
   DDRA = (1<<IR_LED)|(1<<GRN_LED);
   DDRB = (1<<RED_LED);
@@ -90,14 +95,11 @@ void setup() {
 
   // Read the address of the badge
   myID_H = EEPROM.read(ID_HIGH_ADDRESS);
+  myID_M = EEPROM.read(ID_MIDDLE_ADDRESS);
   myID_L = EEPROM.read(ID_LOW_ADDRESS);
-  myID = (myID_H<<8) + myID_L; // Combine the 8-bit addresses
+  myID = (myID_H<<16) + (myID_M<<8) + myID_L; // Combine the 8-bit addresses
 
   wdtSetup();
-
-  PORTA |= (1<<GRN_LED);
-  timerDelay(31);
-  PORTA &= ~(1<<GRN_LED);
   
   sei(); // Enable global interrupts
 }
@@ -129,31 +131,31 @@ void loop()
 
 ////Standby///////////////////////////////////////////////////////////////////////////////
 void Standby(void)
-{
+{  
   // Wait for button to be pressed
   if(interrupted)
   {
-    if(selection == UPLOAD_SCORE)
+    switch (selection)
     {
-      mode = 2;
+      case(UPLOAD_SCORE):
+        mode = 2;
+        shot_packet[0] = (myID>>16) & 0xFF;
+        shot_packet[1] = (myID>>8) & 0xFF;
+        shot_packet[2] = myID & 0xFF;
+        shot_packet[3] = EEPROM.read(SCORE_ADDRESS)<<2;
+        break;
 
-      shot_packet[0] = myID >> 8;
-      shot_packet[1] = myID & 0xFF;
-      shot_packet[2] = EEPROM.read(SCORE_ADDRESS);
-      shot_packet[3] = 0;
-    }
-    else if(selection == DISPLAY_SCORE)
-    {
-      mode = 3;
-    }
-    else
-    {
-      mode = 1; // User wants to play
+      case (DISPLAY_SCORE):
+        mode = 3;
+        break;
       
-      shot_packet[0] = myID >> 8;
-      shot_packet[1] = myID & 0xFF;
-      shot_packet[2] = selection; // Load button pressed to transmission packet
-      shot_packet[3] = 0;
+      default:
+        mode = 1; // User wants to play
+        shot_packet[0] = (myID>>16) & 0xFF;
+        shot_packet[1] = (myID>>8) & 0xFF;
+        shot_packet[2] = myID & 0xFF;
+        shot_packet[3] = selection; // Load button pressed to transmission packet
+        break;
     }
   }
 }
@@ -173,13 +175,13 @@ void Gameplay(void)
     attempt = 0;
   }
 
+  // Generate Random number
   while(!sample_waiting); // Wait for new random number to be generated in ISR
   sample_waiting = 0;
-
   result = rotl(result, 1); // Spread randomness around
   result = (result^sample)&7; // XOR preserves randomness, & 7 keeps the result below 7
   
-  timerDelay(result);
+  timerDelay(result); // Delay random number
   
   // Read opponent's data
   if(intar_ir.available())
@@ -193,7 +195,7 @@ void Gameplay(void)
   timerDelay(3);
   
   // Both sides have all the info they need. Display results
-  if(packet[3]==2 && shot_packet[3] == 2)
+  if((packet[3]&0x03)==2 && (shot_packet[3]&0x03) == 2)
   {
     intar_ir.disableReceiver();
 
@@ -201,15 +203,17 @@ void Gameplay(void)
     timerDelay(1);
     sendData(shot_packet,shot_packet_size);
 
+    uint8_t ourMove = (shot_packet[3]&0xF0);
+
     // Figure out if we won/lost/tied
     switch(theirMove)
     {
       case (ROCK):
-        if(shot_packet[2] == PAPER)
+        if(ourMove == PAPER)
         {
           gameResult = 1; // Win
         }
-        else if(shot_packet[2] == SCISSORS)
+        else if(ourMove == SCISSORS)
         {
           gameResult = 2; // Lose
         }
@@ -219,11 +223,11 @@ void Gameplay(void)
         }
         break;
       case (PAPER):
-        if(shot_packet[2] == ROCK)
+        if(ourMove == ROCK)
         {
           gameResult = 2; // Lose
         }
-        else if(shot_packet[2] == SCISSORS)
+        else if(ourMove == SCISSORS)
         {
           gameResult = 1; // Win          
         }
@@ -233,11 +237,11 @@ void Gameplay(void)
         }
         break;
       case (SCISSORS):
-        if(shot_packet[2] == PAPER)
+        if(ourMove == PAPER)
         {
           gameResult = 2; // Lose
         }
-        else if(shot_packet[2] == ROCK)
+        else if(ourMove == ROCK)
         {
           gameResult = 1; // Win
         }
@@ -251,8 +255,8 @@ void Gameplay(void)
         break;
     }
 
-    uint16_t lastOpponentID = (EEPROM.read(LAST_ID_H)<<8) + EEPROM.read(LAST_ID_L);
-    uint16_t thisOpponentID = (packet[0]<<8) + packet[1];
+    uint32_t lastOpponentID = (EEPROM.read(LAST_ID_H)<<16) + (EEPROM.read(LAST_ID_M)<<8) + EEPROM.read(LAST_ID_L);
+    uint32_t thisOpponentID = (packet[0]<<16) + (packet[1]<<8) + packet[2];
     
     if(thisOpponentID == lastOpponentID)
     {
@@ -268,10 +272,13 @@ void Gameplay(void)
     else
     {
       EEPROM.write(LAST_ID_H,packet[0]);
-      EEPROM.write(LAST_ID_L,packet[1]);
+      EEPROM.write(LAST_ID_M,packet[1]);
+      EEPROM.write(LAST_ID_L,packet[2]);
       EEPROM.write(PLAY_COUNT_ADDRESS,0x00);
     }
 
+    uint8_t currentScore = EEPROM.read(SCORE_ADDRESS);
+    
     // Display the results
     switch(gameResult)
     {
@@ -291,13 +298,26 @@ void Gameplay(void)
         break;
         
       case(1):  // Win
-        EEPROM.write(SCORE_ADDRESS, EEPROM.read(SCORE_ADDRESS)+1);  // Update our score
-        
-        PORTB &= ~(1<<RED_LED);   // Turn off RED LED
-        PORTA |= (1<<GRN_LED);    // Turn on GRN LED
-
-        // Wait for 2000ms
-        timerDelay(61);
+        if(currentScore > 62)
+        {
+          for(uint8_t i=0;i<10;i++)
+          {
+            // Wait 100ms
+            timerDelay(3);
+            PORTB ^= (1<<RED_LED);  // Toggle LED state
+          }
+          PORTB &= ~(1<<RED_LED); // Make sure LED is off
+        }
+        else
+        {
+          EEPROM.write(SCORE_ADDRESS, EEPROM.read(SCORE_ADDRESS)+1);  // Update our score
+          
+          PORTB &= ~(1<<RED_LED);   // Turn off RED LED
+          PORTA |= (1<<GRN_LED);    // Turn on GRN LED
+          
+          // Wait for 2000ms
+          timerDelay(61);
+        }
         break;
         
       case(2):  // Lose        
@@ -313,7 +333,7 @@ void Gameplay(void)
         {
           // Wait 100ms
           timerDelay(3);
-          PORTB ^= (1<<RED_LED);  // Switch LED state
+          PORTB ^= (1<<RED_LED);  // Toggle LED state
         }
         PORTB &= ~(1<<RED_LED); // Make sure LED is off
         break;
@@ -388,12 +408,13 @@ void Dumpscore(void)
   timerDelay(9);
   
   // Both sides have all the info they need. Display results
-  if(packet[3]==2 && shot_packet[3] == 2)
+  if((packet[3]&0x03)==2 && (shot_packet[3]&0x03) == 2)
   {
     intar_ir.disableReceiver();
     
     EEPROM.write(SCORE_ADDRESS,0x00);
     EEPROM.write(LAST_ID_H,0x00);
+    EEPROM.write(LAST_ID_M,0x00);
     EEPROM.write(LAST_ID_L,0x00);
     EEPROM.write(PLAY_COUNT_ADDRESS,0x00);
     
@@ -485,33 +506,34 @@ void Displayscore(void)
 void timerDelay(uint8_t amount)
 {
   // Start timer0 (used to generate delays)
-    TCCR0A = 0x00;  //Clear TCCR0A
-    TCCR0B = (1<<CS02)|(1<<CS00); // Set clock prescale to clk/1024
-    TCNT0 = 0x00;  // Reset counter
-    TIMSK0 |= (1 << OCIE0A);  // Enable timer0 interrupt
-    count = 0;  // count is updated when the timer overflows (happens appox. every 32ms)
-    
-    while(count < amount); // delay = amount * 32ms
+  TCCR0A = 0x00;  //Clear TCCR0A
+  TCCR0B = (1<<CS02)|(1<<CS00); // Set clock prescale to clk/1024
+  TCNT0 = 0x00;  // Reset counter
+  TIMSK0 |= (1 << OCIE0A);  // Enable timer0 interrupt
+  count = 0;  // count is updated when the timer overflows (happens appox. every 32ms)
+  
+  while(count < amount); // delay = amount * 32ms
 }
 
 void sendData(uint8_t data[],uint8_t len)
 {
-  intar_ir.disableReceiver(); // Disable receiver so we don't read our own data
+  intar_ir.disableReceiver();   // Disable receiver so we don't read our own data
   PORTA |= (1<<GRN_LED);        // Turn on LED
-  intar_ir.send(data, len); // Transmit our data
-  intar_ir.enableReceiver();  // Start listening for opponent's data again
+  intar_ir.send(data, len);     // Transmit our data
+  intar_ir.enableReceiver();    // Start listening for opponent's data again
   
-  intar_ir.disableReceiver(); // Disable receiver so we don't read our own data
-  intar_ir.send(shot_packet, shot_packet_size); // Transmit again for good measure
+  intar_ir.disableReceiver();   // Disable receiver so we don't read our own data
+  intar_ir.send(data, len);     // Transmit our data again for good measure
   PORTA &= ~(1<<GRN_LED);       // Turn off LED
   intar_ir.flushTransmitter();
-  intar_ir.enableReceiver();  // Start listening for opponent's data again
+  intar_ir.enableReceiver();    // Start listening for opponent's data again
 }
 
 uint8_t readData(void)
 {
-  uint8_t num_bytes, theirMove, playerID_low, playerID_high;
-  uint16_t playerID;
+  uint8_t num_bytes, theirMove; 
+  uint32_t playerID, playerID_high;
+  uint8_t  playerID_low, playerID_middle;  
   
   memset(packet, 0, MAX_PACKET_SIZE);   // Load data received to packet[]
   num_bytes = intar_ir.read(packet);  // Number of bytes received
@@ -519,8 +541,9 @@ uint8_t readData(void)
   if(num_bytes!=0 && num_bytes!=RECV_ERROR)   // Valid packet
   {
     playerID_high = packet[0];
-    playerID_low = packet[1];
-    playerID = (playerID_high<<8) + playerID_low;
+    playerID_middle = packet[1];
+    playerID_low = packet[2];
+    playerID = (playerID_high<<16) + (playerID_middle<<8) + playerID_low;
       
     if(playerID != myID) // Must be opponent's data, so read what they sent
     {
@@ -531,14 +554,14 @@ uint8_t readData(void)
       if(playerID == opponentID)
       {
         PORTB |= (1<<RED_LED);  // Turn on LED
-        shot_packet[3] = 1;     // Set acknowledge
+
+        shot_packet[3] = (shot_packet[3]&0xFC) + 0x01;     // Set acknowledge
   
-        if(packet[3]==1 || packet[3]==2) // Opponent has recieved our move
+        if((packet[3]&0x03)==1 || (packet[3]&0x03)==2)  // Opponent has recieved our move
         {
-          shot_packet[3] = 2;     // Update acknowledge
-          theirMove = packet[2];  // Store our opponent's move
+          shot_packet[3] = (shot_packet[3]&0xFC) + 0x02;   // Update acknowledge
+          theirMove = packet[3]&0xF0;  // Store our opponent's move
         }
-        //timerDelay(1);
         PORTB &= ~(1<<RED_LED); // Turn off LED
       }
     }
