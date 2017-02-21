@@ -18,6 +18,8 @@
  
 #include <IntarIR.h>
 #include <EEPROM.h>
+#include <avr/sleep.h>
+#include <avr/wdt.h>
 
 IntarIR intar_ir;
 
@@ -56,7 +58,7 @@ IntarIR intar_ir;
 
 volatile bool interrupted = 0;  // Interrupt flag used to initialize functions
 volatile uint8_t selection;     // Used to convert switch presses to action values
-volatile uint8_t count = 0;     // Used for timer0 ISR
+volatile uint16_t count = 0;     // Used for timer0 ISR
 volatile bool endTask = 0;
 
 uint8_t attempt = 0;
@@ -65,14 +67,17 @@ uint32_t myID;                   // ID of this badge
 uint32_t opponentID;
 
 // Message we'll send to opponent
-byte shot_packet[4];
-const byte shot_packet_size = 4;
+byte shot_packet[5];
+const byte shot_packet_size = 5;
 
 // Message received from opponent
 byte packet[MAX_PACKET_SIZE];
 
 volatile uint8_t sample = 0;
 volatile bool sample_waiting = 0;
+
+int st_val;
+bool up,down,right,left,center;
 
 void setup() {
   uint32_t myID_H, myID_M, myID_L;  // Badge ID High, Middle, and Low bytes
@@ -83,7 +88,9 @@ void setup() {
 
   // Enable pullup resistors for 5-way switch
   PORTA = (1<<LEFT_PIN)|(1<<RIGHT_PIN)|(1<<UP_PIN)|(1<<DOWN_PIN)|(1<<CENTER_PIN);
-
+  
+  st(); // Self test for production
+  
   // Enable pin change interrupts on joystick pins
   GIMSK = (1<<PCIE0);
   PCMSK0 = (1<<LEFT_PIN)|(1<<RIGHT_PIN)|(1<<UP_PIN)|(1<<DOWN_PIN)|(1<<CENTER_PIN);
@@ -98,14 +105,13 @@ void setup() {
   myID_M = EEPROM.read(ID_MIDDLE_ADDRESS);
   myID_L = EEPROM.read(ID_LOW_ADDRESS);
   myID = (myID_H<<16) + (myID_M<<8) + myID_L; // Combine the 8-bit addresses
-
-  wdtSetup();
   
   sei(); // Enable global interrupts
 }
 
 void loop() 
 {
+  wdt_reset();
   switch (mode)
   {
     case (0): // Standby
@@ -142,21 +148,28 @@ void Standby(void)
         shot_packet[0] = (myID>>16) & 0xFF;
         shot_packet[1] = (myID>>8) & 0xFF;
         shot_packet[2] = myID & 0xFF;
-        shot_packet[3] = EEPROM.read(SCORE_ADDRESS)<<2;
+        shot_packet[3] = EEPROM.read(SCORE_ADDRESS);
+        shot_packet[4] = 0;
         break;
 
       case (DISPLAY_SCORE):
         mode = 3;
         break;
-      
+        
       default:
         mode = 1; // User wants to play
         shot_packet[0] = (myID>>16) & 0xFF;
         shot_packet[1] = (myID>>8) & 0xFF;
         shot_packet[2] = myID & 0xFF;
         shot_packet[3] = selection; // Load button pressed to transmission packet
+        shot_packet[4] = 0;
         break;
     }
+  }
+  else
+  {
+    fadeLED();
+    systemSleep();
   }
 }
 
@@ -173,15 +186,16 @@ void Gameplay(void)
     intar_ir.enableReceiver();
     interrupted = 0;
     attempt = 0;
+    
   }
-
+  wdtSetup();
   // Generate Random number
   while(!sample_waiting); // Wait for new random number to be generated in ISR
   sample_waiting = 0;
   result = rotl(result, 1); // Spread randomness around
   result = (result^sample)&7; // XOR preserves randomness, & 7 keeps the result below 7
   
-  timerDelay(result); // Delay random number
+  timerDelay(result*32); // Delay random number
   
   // Read opponent's data
   if(intar_ir.available())
@@ -192,7 +206,7 @@ void Gameplay(void)
   sendData(shot_packet,shot_packet_size);
   
   // Wait for 100ms 
-  timerDelay(3);
+  timerDelay(100);
   
   // Both sides have all the info they need. Display results
   if((packet[3]&0x03)==2 && (shot_packet[3]&0x03) == 2)
@@ -200,7 +214,7 @@ void Gameplay(void)
     intar_ir.disableReceiver();
 
     sendData(shot_packet,shot_packet_size);
-    timerDelay(1);
+    timerDelay(50);
     sendData(shot_packet,shot_packet_size);
 
     uint8_t ourMove = (shot_packet[3]&0xF0);
@@ -277,7 +291,7 @@ void Gameplay(void)
       EEPROM.write(PLAY_COUNT_ADDRESS,0x00);
     }
 
-    uint8_t currentScore = EEPROM.read(SCORE_ADDRESS);
+    uint16_t currentScore = EEPROM.read(SCORE_ADDRESS);
     
     // Display the results
     switch(gameResult)
@@ -290,7 +304,7 @@ void Gameplay(void)
         for(uint8_t i=0;i<20;i++)
         {
           // Wait 100ms
-          timerDelay(3);
+          timerDelay(100);
           PORTB ^= (1<<RED_LED);  // Switch LED state
           PORTA ^= (1<<GRN_LED);  // Switch LED state
         }
@@ -298,12 +312,12 @@ void Gameplay(void)
         break;
         
       case(1):  // Win
-        if(currentScore > 62)
+        if(currentScore > 255)
         {
           for(uint8_t i=0;i<10;i++)
           {
             // Wait 100ms
-            timerDelay(3);
+            timerDelay(100);
             PORTB ^= (1<<RED_LED);  // Toggle LED state
           }
           PORTB &= ~(1<<RED_LED); // Make sure LED is off
@@ -316,7 +330,7 @@ void Gameplay(void)
           PORTA |= (1<<GRN_LED);    // Turn on GRN LED
           
           // Wait for 2000ms
-          timerDelay(61);
+          timerDelay(2000);
         }
         break;
         
@@ -325,14 +339,14 @@ void Gameplay(void)
         PORTB |= (1<<RED_LED);    // Turn off LED
 
         // Wait for 2000ms
-        timerDelay(61);
+        timerDelay(2000);
         break;
         
       case(3):  // Invalid (played opponent too many times)
         for(uint8_t i=0;i<10;i++)
         {
           // Wait 100ms
-          timerDelay(3);
+          timerDelay(100);
           PORTB ^= (1<<RED_LED);  // Toggle LED state
         }
         PORTB &= ~(1<<RED_LED); // Make sure LED is off
@@ -402,13 +416,13 @@ void Dumpscore(void)
     theirMove = readData();
   }
   
-  sendData(shot_packet,shot_packet_size);
+  sendData(shot_packet,5);
 
-  // Wait for 100ms 
-  timerDelay(9);
+  // Wait for 250ms 
+  timerDelay(250);
   
   // Both sides have all the info they need. Display results
-  if((packet[3]&0x03)==2 && (shot_packet[3]&0x03) == 2)
+  if(packet[3]==2 && shot_packet[4]==2)
   {
     intar_ir.disableReceiver();
     
@@ -428,7 +442,7 @@ void Dumpscore(void)
     opponentID = 0;
 
     PORTA |= (1<<GRN_LED);  // Turn on GRN LED
-    timerDelay(61);         // Wait for 2000ms
+    timerDelay(2000);         // Wait for 2000ms
     PORTA &= ~(1<<GRN_LED); // Turn off LED
   }
 
@@ -444,7 +458,7 @@ void Dumpscore(void)
     opponentID = 0;
     
     PORTB |= (1<<RED_LED);  // Turn on GRN LED
-    timerDelay(61);         // Wait for 2000ms
+    timerDelay(2000);         // Wait for 2000ms
     PORTB &= ~(1<<RED_LED); // Turn off LED
   }
 
@@ -470,16 +484,19 @@ void Displayscore(void)
 {
   uint8_t score = EEPROM.read(SCORE_ADDRESS);
 
+  interrupted = 0;
+  
   if(score != 0)
   {
+    timerDelay(500);
     for(uint8_t i=0; i<score; i++)
     {
       PORTA |= (1<<GRN_LED);
-      timerDelay(15);
+      timerDelay(500);
       PORTA &= ~(1<<GRN_LED);
-      timerDelay(15);
+      timerDelay(500);
 
-      if(endTask && i>0)
+      if(endTask && i>2)
       {
         break;
       }
@@ -492,7 +509,7 @@ void Displayscore(void)
   else
   {
     PORTB |= (1<<RED_LED);
-    timerDelay(23);
+    timerDelay(750);
     PORTB &= ~(1<<RED_LED);
   }
 
@@ -501,18 +518,66 @@ void Displayscore(void)
   endTask = 0;
 }
 
-
-
-void timerDelay(uint8_t amount)
+// system wakes up when watchdog is timed out
+void systemSleep() 
 {
-  // Start timer0 (used to generate delays)
-  TCCR0A = 0x00;  //Clear TCCR0A
-  TCCR0B = (1<<CS02)|(1<<CS00); // Set clock prescale to clk/1024
-  TCNT0 = 0x00;  // Reset counter
-  TIMSK0 |= (1 << OCIE0A);  // Enable timer0 interrupt
-  count = 0;  // count is updated when the timer overflows (happens appox. every 32ms)
+  //Setup Watchdog
+  MCUSR &= ~(1<<WDRF);                  // Reset Watchdog Reset Flag
+  WDTCSR |= (1<<WDCE) | (1<<WDE);       // Set Watchdog Change enable and watchdog enable
+  WDTCSR = (1<<WDCE)|0x07;              // Set new watchdog timeout value (~2s)
+  WDTCSR |= (1<<WDIE);                  // Set watchdog interrupt enable bit
   
-  while(count < amount); // delay = amount * 32ms
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);  // sleep mode is set here
+  sleep_enable();
+  sei();                                // Enable the Interrupts so the wdt can wake us up
+  sleep_mode();                         // System sleeps here
+  sleep_disable();                      // System continues execution here when watchdog timed out 
+}
+
+
+void fadeLED()
+{  
+  // PWM on GRN_LED (OC0B)
+  TCCR0A = (1<<COM0B1)|(1<<WGM01)|(1<<WGM00);
+
+  for(int i=0;i<130;i+=5)
+  {
+    if(interrupted)break;
+    else
+    {
+      OCR0B = i;
+      timerDelay(25);
+    }
+  }
+  for(int i=0;i<130;i+=5)
+  {
+    if(interrupted)break;
+    else
+    {
+      OCR0B = 130-i;
+      timerDelay(25);
+    }
+  }
+  //OCR0B = 0;
+  TCCR0A &= ~(1<<COM0B1);
+}
+
+void timerDelay(uint16_t amount)
+{
+  amount /= 2;
+  //TCCR0A = 0x00;                  //
+  TCCR0B = (1<<CS01)|(1<<CS00);   // Set clock rate to clk/64
+  TIMSK0 = (1<<OCIE0A);           // Enable compare match A interrupt
+  
+  OCR0A = 125;                    // Interrupt after ~1ms
+  TCNT0 = 0x00;                   // Reset counter
+  TIMSK0 |= (1 << OCIE0A);        // Enable timer0 interrupt
+  count = 0;  // count is updated when the timer overflows (happens appox. every 1ms)
+  
+  while((count < amount) && !interrupted)
+  {
+    wdt_reset(); // delay = amount * 1ms
+  }
 }
 
 void sendData(uint8_t data[],uint8_t len)
@@ -554,13 +619,28 @@ uint8_t readData(void)
       if(playerID == opponentID)
       {
         PORTB |= (1<<RED_LED);  // Turn on LED
-
-        shot_packet[3] = (shot_packet[3]&0xFC) + 0x01;     // Set acknowledge
+        
+        if(mode == 2)  //Dump score
+        {
+          shot_packet[4] = 0x01;  // Set acknowledge
+        }
+        else
+        {
+          shot_packet[3] = (shot_packet[3]&0xFC) + 0x01;     // Set acknowledge
+        }
   
         if((packet[3]&0x03)==1 || (packet[3]&0x03)==2)  // Opponent has recieved our move
         {
-          shot_packet[3] = (shot_packet[3]&0xFC) + 0x02;   // Update acknowledge
-          theirMove = packet[3]&0xF0;  // Store our opponent's move
+          if(mode == 2)
+          {
+            shot_packet[4] = 0x02;   // Update acknowledge
+            theirMove = packet[3]&0xF0;  // Store our opponent's move
+          }
+          else
+          {
+            shot_packet[3] = (shot_packet[3]&0xFC) + 0x02;   // Update acknowledge
+            theirMove = packet[3]&0xF0;  // Store our opponent's move
+          }
         }
         PORTB &= ~(1<<RED_LED); // Turn off LED
       }
@@ -590,6 +670,124 @@ void wdtSetup() {
   sei();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+void st()
+{
+  // Enable pullup resistors for 5-way switch (IN FW)
+  DDRA = (1<<GRN_LED)|(1<<IR_LED);
+  DDRB = (1<<RED_LED);
+
+  PORTA &= ~((1<<GRN_LED)|(1<<IR_LED));
+  PORTB &= ~(1<<RED_LED);
+
+  if((!(PINA & (1<<UP_PIN))) && (!(PINA & (1<<LEFT_PIN))) && (!(PINA & (1<<RIGHT_PIN))) && (!(PINA & (1<<CENTER_PIN))))
+  {
+    _delay_ms(500);
+    st_val = 0;
+    five_way_tst();
+    if(st_val==5)
+    {
+      transmit_IR();
+      _delay_ms(250);
+      recieve_IR();
+    }
+  }
+}
+///////////////////////////////////////////////////////////////////////////////////////
+void five_way_tst()
+{
+  byte i;
+  for(i=0;i<70;i++)
+  {
+   if(st_val < 5)
+   {
+    PORTA |= (1<<GRN_LED);
+    PORTB &= ~(1<<RED_LED);
+    if((!(PINA & (1<<UP_PIN))) && (up==0))
+    {
+      up=1;
+      st_val++;
+    }
+    _delay_ms(50);
+    if((!(PINA & (1<<DOWN_PIN))) && (down==0))
+    {
+      down=1;
+      st_val++;
+    }
+    _delay_ms(50);
+    PORTA &= ~(1<<GRN_LED);
+    PORTB |= (1<<RED_LED);
+    
+    if((!(PINA & (1<<RIGHT_PIN))) && (right==0))
+    {
+      right=1;
+      st_val++;
+    }
+    _delay_ms(50);
+    if((!(PINA & (1<<LEFT_PIN))) && (left==0))
+    {
+      left=1;
+      st_val++;
+    }
+    _delay_ms(50);
+    if((!(PINA & (1<<CENTER_PIN))) && (center==0))
+    {
+      center=1;
+      st_val++;
+    }
+    if(st_val==5)
+    {
+      i = 71;
+      PORTA &= ~(1<<GRN_LED);
+      PORTB &= ~(1<<RED_LED);
+    }
+   }
+  }
+  if(i==70)
+  {
+    PORTB |= (1<<RED_LED);
+    PORTA &= ~(1<<GRN_LED);
+  }
+}
+////////////////////////////////////////////////////////////////////////////////////
+void transmit_IR()
+{
+  for(int i=0;i<2000;i++)
+  {
+    PORTB |= (1<<RED_LED);
+    PORTA |= (1<<IR_LED);
+    _delay_us(11);
+    PORTA &= ~(1<<IR_LED);
+    _delay_us(10);
+  }
+  
+  PORTB &= ~(1<<RED_LED);
+}
+///////////////////////////////////////////////////////////////////////////////////
+void recieve_IR()
+{
+  byte i;
+  
+  for(i=0;i<250;i++)
+  {
+    _delay_ms(10);
+    if(!(PINA & (1<<IR_REC)))
+    {
+      while(1)
+      {
+        PORTA |= (1<<GRN_LED);
+      }
+    }
+  }
+  if(i>249)
+  {
+    while(1)
+    {
+      PORTB |= (1<<RED_LED);
+    }
+  }
+}
+
 // Watchdog Timer Interrupt Service Routine
 ISR(WDT_vect)
 {
@@ -605,32 +803,28 @@ ISR(PCINT0_vect)
     //Change interrupted only if button is LOW
     if(!(PINA & (1<<RIGHT_PIN)))      //Right - Scissors
     {
-      selection = SCISSORS;
+      selection = SCISSORS; //0x30
       interrupted = 1;
     }
     else if(!(PINA & (1<<UP_PIN)))    //Up - Paper
     {
-      selection = PAPER;
+      selection = PAPER;  //0x20
       interrupted = 1;
     }
     else if(!(PINA & (1<<LEFT_PIN)))  //Left - Rock
     {
-      selection = ROCK;
+      selection = ROCK; //0x10
       interrupted = 1;
     }
     else if(!(PINA & (1<<DOWN_PIN)))  //Down - Upload score to scoreboard
     {
-      selection = UPLOAD_SCORE;
+      selection = UPLOAD_SCORE; //0xA0
       interrupted = 1;
     }
     else if(!(PINA & (1<<CENTER_PIN)))  //Center - Display Score
     {
-      selection = DISPLAY_SCORE;
+      selection = DISPLAY_SCORE;  //0xB0
       interrupted = 1;
-    }
-    else                              //Error - shouldn't ever happen
-    {
-      selection = 0;
     }
   }
   else
@@ -664,3 +858,4 @@ ISR(TIM0_COMPA_vect)
 {
   count++;
 }
+
