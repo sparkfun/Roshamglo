@@ -1,0 +1,8 @@
+{
+  "name": "Roshamglo",
+  "main": "index.html",
+  "window": {
+    "toolbar": true,
+	"fullscreen": true
+  }
+}
