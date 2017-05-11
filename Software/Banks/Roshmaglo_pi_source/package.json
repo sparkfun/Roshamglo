@@ -1,0 +1,8 @@
+{
+  "name": "NutritionApp",
+  "main": "index.html",
+  "window": {
+    "fullscreen": false,
+    "toolbar": true
+  }
+}

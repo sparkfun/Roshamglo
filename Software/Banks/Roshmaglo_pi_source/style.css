@@ -1,0 +1,14 @@
+*{
+  font-family: 'Alfa Slab One', cursive;
+}
+
+input[name="upc"]:focus,
+input[name="upc"]{
+  background-color: transparent;
+  border: solid;
+  border-width: 0 0 5px 0;
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  text-align: center;
+}
