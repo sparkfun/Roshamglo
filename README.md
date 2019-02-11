@@ -16,6 +16,11 @@ The SparkFun Roshamglo is a badge that can be worn with a lanyard clip that has 
 * **/Firmware** - Code used to play Rock Paper Scissors (.ino)
 * **/Hardware** - All Eagle design files (.brd, .sch, .dxf, .lbr, .scr)
 
+Documentation
+--------------
+* **[Hookup Guide](https://learn.sparkfun.com/tutorials/roshamglo-hookup-guide)** - Basic hookup guide.
+* **[Roshamglo Project: TV-B-Gone](https://learn.sparkfun.com/tutorials/roshamglo-project-tv-b-gone)**
+* **[Hack Your Roshamglo Badge](https://learn.sparkfun.com/tutorials/hack-your-roshamglo-badge)** 
 
 License Information
 -------------------
